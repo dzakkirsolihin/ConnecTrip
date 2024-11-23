@@ -5,8 +5,9 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
+                    <a href="{{ route('dashboard') }}" class="flex items-center">
                         <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                        <span class="text-2xl font-bold text-gray-800 transition duration-300 hover:text-[#7C2D12] ms-2">ConnecTrip</span>
                     </a>
                 </div>
 
@@ -22,9 +23,9 @@
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 @auth
                     <!-- Settings Dropdown -->
-                    <x-dropdown align="right" width="48">
+                    <x-dropdown align="right" width="48" bgColor="bg-custom">
                         <x-slot name="trigger">
-                            <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                            <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white hover:text-yellow-100 focus:outline-none transition ease-in-out duration-150" style="background-color: #7C2D12">
                                 <div>{{ Auth::user()->name }}</div>
 
                                 <div class="ms-1">
@@ -55,7 +56,7 @@
                 @else
                     <!-- Login and Register Links -->
                     <div class="flex space-x-4">
-                        <a href="{{ route('login') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" style="background-color: #EF4444">
+                        <a href="{{ route('login') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" style="background-color: #7C2D12">
                             Login
                         </a>
                         <a href="{{ route('register') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-gray-800 bg-yellow-200 hover:bg-yellow-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-300" style="background-color: #FFEDD5">

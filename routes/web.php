@@ -27,3 +27,27 @@ Route::middleware(['auth', 'role:user'])->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+
+// Contoh Grouping Route dengan Middleware
+// Route::middleware(['auth', 'verified'])->group(function () {
+//     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+//     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
+// });
+
+// // Contoh Grouping Route denga Prefix
+// Route::prefix('user')->group(function () {
+//     Route::get('/', [DashboardController::class, 'index'])->name('user.dashboard');
+// });
+
+// Contoh Grouping dengan Route Name Prefix
+// Route::name('admin.')->prefix('admin')->group(function () {
+//     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+//     Route::get('/users', [UserController::class, 'index'])->name('users.index');
+// });
+
+// Contoh Grouping dengan subdomain
+// Route::domain('{account}.example.com')->group(function () {
+//     Route::get('/dashboard', [AccountDashboardController::class, 'index'])->name('account.dashboard');
+//     Route::get('/settings', [AccountSettingController::class, 'index'])->name('account.settings');
+// });
