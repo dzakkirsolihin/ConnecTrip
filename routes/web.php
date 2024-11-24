@@ -8,6 +8,12 @@ Route::get('/', function () {
     return view('user.dashboard');
 })->name('dashboard');
 
+Route::get('/trip-map', function () {
+    return view('user.trip-map');
+})->middleware(['auth', 'verified'])->name('trip-map');
+
+
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
