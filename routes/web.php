@@ -8,6 +8,10 @@ Route::get('/', function () {
     return view('user.dashboard');
 })->name('dashboard');
 
+Route::get('/destination', function () {
+    return view('user.destination');
+})->name('destination');
+
 Route::get('/trip-map', function () {
     return view('user.trip-map');
 })->name('trip-map');
