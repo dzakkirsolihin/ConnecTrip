@@ -18,9 +18,9 @@
         </div>
         <div class="flex justify-center items-center min-h-screen">
             <div class="container w-3/4 mx-auto px-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {{-- card --}}
-                    <a href="route('destination')" :active="request()->routeIs('destination')">
+                    <a href="{{ route('destination') }}" class="{{ request()->routeIs('destination') ? 'active' : '' }}">
                         <div class="bg-white border border-gray-300 rounded-3xl shadow-lg overflow-hidden">
                             <img alt="Traditional Toraja houses with blue sky" class="w-fulll h-48 object-cover" height="400" src="https://storage.googleapis.com/a1aa/image/8VkhsEamSA4lB1e0zlWy9eGsJfqPmAuMMPdLXU6Xh6FSTRwnA.jpg" width="600"/>
                             <div class="p-4">
