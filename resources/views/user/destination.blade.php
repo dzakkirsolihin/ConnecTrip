@@ -97,10 +97,10 @@
             </div>
             <div class="mt-6 p-6 bg-white rounded-lg shadow-lg">
                 <div class="flex justify-between items-center">
-                    <h1 class="text-2xl font-bold">Rundown</h1>
+                    <h1 class="text-2xl font-bold">Review</h1>
                 </div>
-                <h2 class="text-2xl font-semibold mb-4">Review</h2>
-                <div class="space-y-6">
+                
+                <div class="space-y-6 pt-4">
                     <div>
                         <p class="font-semibold">Steven Anugrah</p>
                         <p class="text-sm text-gray-500">February 3, 2024 <i class="fas fa-quote-left text-yellow-500"></i></p>
