@@ -2,15 +2,17 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Models\Destination;
+use App\Http\Controllers\DashboardController;
 
 
 Route::get('/', function () {
-    return view('user.dashboard');
+    return view('user.dashboard' , ['dashboard'=> Destination::all()]);
 })->name('dashboard');
 
-Route::get('/destination', function () {
-    return view('user.destination');
-})->name('destination');
+Route::get('/destination/{destination:name_destination}', function (Destination $destination) {
+    return view('user.destination', ['destination' => $destination]);
+});
 
 Route::get('/trip-map', function () {
     return view('user.trip-map');

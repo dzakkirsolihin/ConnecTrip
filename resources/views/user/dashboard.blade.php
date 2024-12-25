@@ -20,22 +20,23 @@
             <div class="container w-3/4 mx-auto px-4">
                 <div class="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {{-- card --}}
-                    <a href="{{ route('destination') }}" class="{{ request()->routeIs('destination') ? 'active' : '' }}">
+                    @foreach ($dashboard as $destination)
+                    <a href="/destination/{{ $destination['name_destination'] }}" class="{{ request()->routeIs('destination') ? 'active' : '' }}">
                         <div class="bg-white border border-gray-300 rounded-3xl shadow-lg overflow-hidden">
                             <img alt="Traditional Toraja houses with blue sky" class="w-fulll h-48 object-cover" height="400" src="https://storage.googleapis.com/a1aa/image/8VkhsEamSA4lB1e0zlWy9eGsJfqPmAuMMPdLXU6Xh6FSTRwnA.jpg" width="600"/>
                             <div class="p-4">
                                 <div class="flex justify-between items-center mb-2">
-                                    <span class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">Open Trip</span>
+                                    <span class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">{{ $destination->status_trip }}</span>
                                     <span class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">2 Day</span>
                                 </div>
-                                    <h2 class="text-xl font-bold mb-2">Toraja</h2>
+                                <h2 class="text-xl font-bold mb-2">{{ $destination->name_destination }}</h2>
                                 <div class="flex items-center text-gray-600 mb-1">
                                     <i class="fas fa-calendar-alt mr-2"></i>
-                                    <span class="text-sm">12-13 Juli 2024</span>
+                                    <span class="text-sm">{{ $destination->date }}</span>
                                 </div>
                                 <div class="flex items-center text-gray-600 mb-1">
                                     <i class="fas fa-map-marker-alt mr-2"></i>
-                                    <span class="text-sm">Sulawesi Selatan</span>
+                                    <span class="text-sm">{{ $destination->address }}</span>
                                 </div>
                                 <div class="text-base text-gray-600 mb-1">Estimation</div>
                                 <div class="flex justify-between items-center mb-2">
@@ -47,6 +48,7 @@
                             </div>
                         </div>
                     </a>
+                    @endforeach
                 </div>
             </div>
         </div>

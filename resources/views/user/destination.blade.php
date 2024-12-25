@@ -21,53 +21,34 @@
             </div>
             <div class="mt-6 p-6 bg-white rounded-lg shadow-lg">
              <div class="flex justify-between items-center">
-              <h1 class="text-2xl font-bold">
-               Tur Candi Borobudur
-              </h1>
+              <h1 class="text-2xl font-bold"> Tur {{ $destination->name_destination }} </h1>
               <div class="flex items-center space-x-4">
-               <span class="bg-red-600 text-white px-3 py-1 rounded-full">
-                Open Trip
-               </span>
-               <i class="fas fa-share-alt text-gray-600">
-               </i>
-               <i class="fas fa-heart text-gray-600">
-               </i>
+               <span class="bg-red-600 text-white px-3 py-1 rounded-full"> {{ $destination->status_trip }} </span>
+               <i class="fas fa-share-alt text-gray-600"></i>
+               <i class="fas fa-heart text-gray-600"></i>
               </div>
              </div>
              <div class="mt-4">
               <div class="flex items-center space-x-2 text-gray-600">
                <i class="fas fa-calendar-alt">
                </i>
-               <span>
-                12 Juli 2024
-               </span>
+               <span>{{ $destination->date }}</span>
               </div>
               <div class="flex items-center space-x-2 text-gray-600 mt-2">
-               <i class="fas fa-map-marker-alt">
-               </i>
-               <span>
-                Jawa Tengah
-               </span>
+               <i class="fas fa-map-marker-alt"></i>
+               <span>{{ $destination->address }}</span>
               </div>
               <div class="flex items-center space-x-2 text-gray-600 mt-2">
-               <i class="fas fa-clock">
-               </i>
-               <span>
-                2 DAY
-               </span>
+               <i class="fas fa-clock"></i>
+               <span>2 DAY</span>
               </div>
               <div class="flex items-center space-x-2 text-gray-600 mt-2">
-               <i class="fas fa-users">
-               </i>
-               <span>
-                40/90
-               </span>
+               <i class="fas fa-users"></i>
+               <span>40/90</span>
               </div>
              </div>
              <div class="mt-6">
-              <button class="w-full bg-red-600 text-white py-3 rounded-lg font-bold">
-               Join Trip Now
-              </button>
+              <button class="w-full bg-red-600 text-white py-3 rounded-lg font-bold">Join Trip Now</button>
              </div>
             </div>
             <div class="mt-6 p-6 bg-white rounded-lg shadow-lg">
@@ -75,7 +56,7 @@
                     <h1 class="text-2xl font-bold">About Destination</h1>
                 </div>
                 <div class="pt-4">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus optio illo numquam fugit voluptate. Consectetur possimus voluptates optio ex, repellendus vero, consequatur a eos iure eligendi veniam non, quia facere? Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio voluptate, inventore vero praesentium, maiores dolor harum recusandae deserunt id maxime nihil ratione voluptatibus. Quidem, earum distinctio. Quas unde saepe labore! Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum quos consequuntur corporis enim odio explicabo eveniet magni sed, beatae molestias. Accusantium maxime eveniet eius beatae magnam mollitia assumenda quasi voluptates. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Explicabo rerum amet voluptatem quae laudantium similique architecto facilis quos alias officia debitis nulla rem qui quasi, molestiae soluta sequi velit ad?</p>
+                    <p>{{ $destination->destination_description }}</p>
                 </div>
             </div>
             <div class="mt-6 p-6 bg-white rounded-lg shadow-lg">
