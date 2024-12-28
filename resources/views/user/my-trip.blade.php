@@ -21,8 +21,8 @@
     <div class="relative text-center text-white">
         <img src="https://storage.googleapis.com/a1aa/image/IjsL1vO5HpaqAlgi9xhziFMjKSevpZZDVA8ZGuJldGlbZofTA.jpg" 
              alt="Beautiful landscape with a temple and mountains" 
-             class="w-full h-auto"/>
-        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-5xl font-bold">
+             class="w-full h-[400px] object-cover"/>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-5xl font-bold font-['Playfair_Display']">
             My Trips
         </div>
     </div>
@@ -35,7 +35,7 @@
     </div>
 
     <!-- Trip Cards -->
-    <div class="flex justify-center p-5">
+    <div class="flex justify-center p-10">
         <!-- Raja Ampat Card -->
         <div class="bg-white rounded-lg shadow-lg mx-2.5 overflow-hidden w-[300px]">
             <img src="https://storage.googleapis.com/a1aa/image/XUQ10KijbLL0KpjaIwLZwVJcMurWkptCiUxZEVWJtRUuM0fJA.jpg" 
