@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TripMapController;
 
 
 Route::get('/', function () {
@@ -18,6 +19,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::post('/memories/upload', [TripMapController::class, 'uploadPhotos'])->name('memories.upload');
+    Route::get('/memories/{destinationId}', [TripMapController::class, 'getPhotos'])->name('memories.get');
+    Route::delete('/memories/{id}', [TripMapController::class, 'deletePhoto'])->name('memories.delete');
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {

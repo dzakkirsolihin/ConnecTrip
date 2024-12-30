@@ -4,11 +4,10 @@
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" />
         
+        {{-- Only keeping essential custom styles that can't be handled by Tailwind --}}
         <style>
             .custom-popup .leaflet-popup-content-wrapper {
-                background: rgba(255, 255, 255, 0.95);
-                border-radius: 12px;
-                box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+                @apply bg-white/95 rounded-xl shadow-lg;
             }
 
             .custom-popup .leaflet-popup-content {
@@ -18,57 +17,13 @@
             }
 
             .custom-popup .leaflet-popup-tip {
-                background: rgba(255, 255, 255, 0.95);
+                @apply bg-white/95;
             }
 
-            .popup-content {
+            #map {
                 width: 100%;
-            }
-
-            .popup-image {
-                width: 100%;
-                height: 150px;
-                object-fit: cover;
-                border-top-left-radius: 12px;
-                border-top-right-radius: 12px;
-            }
-
-            .popup-details {
-                padding: 16px;
-            }
-
-            .popup-button {
-                display: inline-block;
-                background-color: #4F46E5;
-                color: white;
-                padding: 8px 16px;
-                border-radius: 6px;
-                text-decoration: none;
-                transition: background-color 0.3s ease;
-                cursor: pointer;
-                font-size: 14px;
-            }
-
-            .popup-button:hover {
-                background-color: #4338CA;
-            }
-
-            .marker-hover {
-                transition: all 0.3s ease;
-                transform: scale(1.2);
-            }
-
-            .gallery-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                gap: 1.5rem;
-                padding: 1rem;
-            }
-
-            .photo-container {
-                opacity: 0;
-                transform: translateY(10px);
-                animation: fadeInUp 0.5s ease forwards;
+                height: 600px;
+                z-index: 1;
             }
 
             @keyframes fadeInUp {
@@ -78,10 +33,13 @@
                 }
             }
 
-            #map {
-                width: 100%;
-                height: 600px;
-                z-index: 1;
+            .loading-spinner {
+                animation: spin 1s linear infinite;
+            }
+
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
             }
         </style>
     </head>
@@ -90,7 +48,7 @@
         {{-- Header Section with Stats --}}
         <div class="w-full max-w-6xl mb-8">
             <h1 class="text-4xl md:text-5xl font-bold text-center mb-4">
-                Your Travel Memories
+                Your Trip Memories
             </h1>
             <div class="flex justify-center gap-8 text-center">
                 <div class="bg-white p-4 rounded-lg shadow">
@@ -134,7 +92,8 @@
             </div>
         </div>
 
-        <div id="memoriesModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 overflow-y-auto">
+        <!-- Memories Modal -->
+        <div id="memoriesModal" class="hidden fixed inset-0 bg-black/50 z-50 overflow-y-auto">
             <div class="relative min-h-screen flex items-center justify-center p-4">
                 <div class="relative bg-white w-full max-w-4xl rounded-xl shadow-lg overflow-hidden">
                     <!-- Close Button -->
@@ -147,9 +106,7 @@
                     <!-- Header Image -->
                     <div class="relative h-[300px] w-full">
                         <img id="modalHeaderImage" class="w-full h-full object-cover" src="" alt="">
-                        <!-- Gradient Overlay -->
                         <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                        <!-- Title Overlay -->
                         <div class="absolute bottom-0 left-0 p-6 text-white">
                             <h2 id="modalTitle" class="text-3xl font-bold mb-2"></h2>
                             <p id="modalLocation" class="text-lg opacity-90 mb-1"></p>
@@ -159,20 +116,22 @@
     
                     <!-- Content Area -->
                     <div class="p-6">
-                        <div class="mb-8">
-                            <h3 class="text-xl font-semibold mb-4">Your Memories</h3>
-                            
+                        <!-- Memories Grid -->
+                        <div id="memoriesGrid" class="space-y-6">
                             <!-- Upload Area -->
-                            <label class="block w-full border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-indigo-500 hover:bg-gray-50 transition-all group">
-                                <input type="file" multiple accept="image/*" onchange="handleFileUpload(event)" class="hidden">
-                                <div class="space-y-2">
-                                    <svg class="w-10 h-10 mx-auto text-gray-400 group-hover:text-indigo-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                    </svg>
-                                    <p class="text-gray-600 group-hover:text-gray-900">Click or drag photos to upload</p>
-                                    <p class="text-sm text-gray-500">Support JPG, PNG (max. 5MB)</p>
-                                </div>
-                            </label>
+                            <div class="mb-8">
+                                <h3 class="text-xl font-semibold mb-4">Your Memories</h3>
+                                <label class="block w-full border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-indigo-500 hover:bg-gray-50 transition-all group">
+                                    <input type="file" multiple accept="image/*" onchange="handleFileUpload(event)" class="hidden">
+                                    <div class="space-y-2">
+                                        <svg class="w-10 h-10 mx-auto text-gray-400 group-hover:text-indigo-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                        </svg>
+                                        <p class="text-gray-600 group-hover:text-gray-900">Click or drag photos to upload</p>
+                                        <p class="text-sm text-gray-500">Support JPG, PNG (max. 5MB)</p>
+                                    </div>
+                                </label>
+                            </div>
                         </div>
     
                         <!-- Memories Grid -->
@@ -322,16 +281,52 @@
             const marker = L.marker([destination.latitude, destination.longitude]);
             
             const popupContent = `
-                <div class="popup-content">
-                    <img src="${destination.image}" alt="${destination.name}" class="popup-image">
-                    <div class="popup-details">
-                        <h4 class="text-lg font-semibold mb-2">${destination.name}</h4>
-                        <p class="text-sm text-gray-600 mb-1">${destination.location}</p>
-                        <p class="text-sm text-gray-600 mb-3">
-                            ${formatDate(destination.start_date)} - ${formatDate(destination.end_date)}
-                        </p>
-                        <button onclick="viewMemoriesAndClosePopup(${destination.id})" class="popup-button">
-                            See Your Memories
+                <div class="popup-content w-[320px] bg-white rounded-xl overflow-hidden shadow-lg">
+                    <!-- Image Container with Gradient Overlay -->
+                    <div class="relative h-40 overflow-hidden">
+                        <img src="${destination.image}" 
+                            alt="${destination.name}" 
+                            class="w-full h-full object-cover transition duration-300 hover:scale-105"
+                        >
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                    </div>
+
+                    <!-- Content Container -->
+                    <div class="p-3 space-y-2">
+                        <!-- Location Header -->
+                        <div class="space-y-1">
+                            <h4 class="text-lg font-semibold text-gray-800">${destination.name}</h4>
+                            <div class="flex items-center gap-1 text-gray-600">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                <p class="text-sm">${destination.location}</p>
+                            </div>
+                        </div>
+
+                        <!-- Date Info -->
+                        <div class="flex items-center gap-1 text-gray-600">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <p class="text-sm">${formatDate(destination.start_date)} - ${formatDate(destination.end_date)}</p>
+                        </div>
+
+                        <!-- Action Button -->
+                        <button onclick="viewMemoriesAndClosePopup(${destination.id})" 
+                                class="w-full mt-2 px-3 py-2 bg-indigo-600 hover:bg-indigo-700 
+                                    text-white rounded-lg transition duration-300 ease-in-out
+                                    flex items-center justify-center gap-2 group">
+                            <span>See Your Memories</span>
+                            <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" 
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                    d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
                         </button>
                     </div>
                 </div>
@@ -340,10 +335,11 @@
             const popup = L.popup({
                 className: 'custom-popup',
                 closeButton: true,
-                closeOnClick: false
+                closeOnClick: false,
+                maxWidth: 320
             }).setContent(popupContent);
 
-            // Modify hover behavior
+            // Hover behavior
             let isOverMarker = false;
             let isOverPopup = false;
 
@@ -355,7 +351,7 @@
                 }
             });
 
-            marker.on('mouseout', function(e) {
+            marker.on('mouseout', function() {
                 isOverMarker = false;
                 setTimeout(() => {
                     if (!isOverMarker && !isOverPopup) {
@@ -480,57 +476,84 @@
             document.getElementById('modalLocation').textContent = destination.location;
             document.getElementById('modalDates').textContent = `${formatDate(destination.start_date)} - ${formatDate(destination.end_date)}`;
 
-            // Load existing memories
-            const memories = memoriesStorage.get(destinationId) || [];
-            updateMemoriesGrid(memories);
+            // Fetch and load existing memories
+            fetch(`/memories/${destinationId}`, {
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(memories => {
+                if (memories.error) {
+                    throw new Error(memories.error);
+                }
+                updateMemoriesGrid(memories);
+            })
+            .catch(error => {
+                console.error('Error fetching memories:', error);
+                alert('Error loading memories: ' + error.message);
+            });
 
-            // Show modal and prevent body scroll
+            // Show modal
             document.getElementById('memoriesModal').classList.remove('hidden');
             document.body.style.overflow = 'hidden';
         }
 
         function updateMemoriesGrid(memories) {
-            const contentArea = document.querySelector('.p-6');
-            contentArea.innerHTML = `
-                <div class="mb-8">
-                    <h3 class="text-xl font-semibold mb-4">Your Memories</h3>
-                    
-                    ${memories.length === 0 ? `
-                        <!-- Large upload area when no photos -->
-                        <label class="block w-full border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-indigo-500 hover:bg-gray-50 transition-all group">
-                            <input type="file" multiple accept="image/*" onchange="handleFileUpload(event)" class="hidden">
-                            <div class="space-y-2">
-                                <svg class="w-10 h-10 mx-auto text-gray-400 group-hover:text-indigo-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                </svg>
-                                <p class="text-gray-600 group-hover:text-gray-900">Click or drag photos to upload</p>
-                                <p class="text-sm text-gray-500">Support JPG, PNG (max. 5MB)</p>
-                            </div>
-                        </label>
-                    ` : ''}
-                </div>
-
-                <!-- Memories Grid -->
-                <div id="memoriesGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-6">
-                    <!-- Memory items will be dynamically added here -->
-                </div>
-
-                ${memories.length > 0 ? `
-                    <!-- Compact upload button when photos exist -->
-                    <div class="flex justify-center">
-                        <label class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 cursor-pointer group">
-                            <input type="file" multiple accept="image/*" onchange="handleFileUpload(event)" class="hidden">
-                            <svg class="w-5 h-5 mr-2 text-gray-400 group-hover:text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                            </svg>
-                            Add More Photos
-                        </label>
-                    </div>
-                ` : ''}
-            `;
-
             const memoriesGrid = document.getElementById('memoriesGrid');
-            memories.forEach(memory => addMemoryToGrid(memory));
+            memoriesGrid.innerHTML = '';
+            
+            // Container untuk semua konten
+            const contentContainer = document.createElement('div');
+            contentContainer.className = 'space-y-6';
+            
+            // Grid untuk foto-foto
+            const photosGrid = document.createElement('div');
+            photosGrid.className = 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4';
+            
+            // Tambahkan foto-foto yang ada
+            memories.forEach(memory => {
+                const memoryItem = document.createElement('div');
+                memoryItem.className = 'relative aspect-square rounded-lg overflow-hidden group cursor-pointer photo-container';
+                memoryItem.innerHTML = `
+                    <img src="${memory.url}" alt="Memory" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div class="absolute bottom-2 right-2 flex gap-2">
+                            <button onclick="deleteMemory(this, ${memory.id})" class="p-1.5 rounded-full bg-white/80 hover:bg-white text-gray-700 hover:text-red-500 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                photosGrid.appendChild(memoryItem);
+            });
+            
+            // Tambahkan grid foto ke container
+            contentContainer.appendChild(photosGrid);
+            
+            // Tambahkan tombol upload di bawah grid
+            const uploadButton = document.createElement('div');
+            uploadButton.className = 'flex justify-center mt-6';
+            uploadButton.innerHTML = `
+                <label class="inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 cursor-pointer transition-colors duration-200 ease-in-out gap-2">
+                    <input type="file" multiple accept="image/*" onchange="handleFileUpload(event)" class="hidden">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    Add Photo Memories
+                </label>
+            `;
+            contentContainer.appendChild(uploadButton);
+            
+            // Tambahkan semua konten ke memoryGrid
+            memoriesGrid.appendChild(contentContainer);
         }
 
         function closeModal() {
@@ -552,6 +575,23 @@
             const files = Array.from(event.target.files);
             if (files.length === 0) return;
 
+            const destinationId = getCurrentDestinationId(); // Tambahkan fungsi untuk mendapatkan ID destinasi aktif
+            const formData = new FormData();
+            
+            files.forEach(file => {
+                if (!file.type.startsWith('image/')) {
+                    alert(`File ${file.name} is not an image.`);
+                    return;
+                }
+                if (file.size > 5 * 1024 * 1024) {
+                    alert(`File ${file.name} is too large. Maximum size is 5MB.`);
+                    return;
+                }
+                formData.append('photos[]', file);
+            });
+            
+            formData.append('destination_id', destinationId);
+
             // Create loading overlay
             const loadingOverlay = document.createElement('div');
             loadingOverlay.className = 'loading-overlay';
@@ -566,63 +606,49 @@
             `;
             document.body.appendChild(loadingOverlay);
 
-            // Add uploading class to memories grid
-            const memoriesGrid = document.getElementById('memoriesGrid');
-            memoriesGrid.classList.add('uploading');
+            // Add CSRF token to headers
+            const headers = {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            };
 
-            let completedUploads = 0;
-            const validFiles = files.filter(file => {
-                if (!file.type.startsWith('image/')) {
-                    alert(`File ${file.name} is not an image.`);
-                    return false;
+            // Upload photos
+            fetch('/memories/upload', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'  // Tambahkan ini
                 }
-                if (file.size > 5 * 1024 * 1024) {
-                    alert(`File ${file.name} is too large. Maximum size is 5MB.`);
-                    return false;
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
                 }
-                return true;
-            });
-
-            validFiles.forEach((file, index) => {
-                const reader = new FileReader();
-                
-                reader.onprogress = function(e) {
-                    if (e.lengthComputable) {
-                        const percentComplete = (completedUploads + e.loaded / e.total) / validFiles.length * 100;
-                        loadingOverlay.querySelector('.upload-progress-bar').style.width = `${percentComplete}%`;
-                    }
-                };
-
-                reader.onload = function(e) {
-                    completedUploads++;
-                    const progress = (completedUploads / validFiles.length) * 100;
-                    loadingOverlay.querySelector('.upload-progress-bar').style.width = `${progress}%`;
-                    
-                    // Add the memory to grid
-                    addMemoryToGrid(e.target.result);
-
-                    // Remove loading overlay and uploading class when all files are processed
-                    if (completedUploads === validFiles.length) {
-                        setTimeout(() => {
-                            document.body.removeChild(loadingOverlay);
-                            memoriesGrid.classList.remove('uploading');
-                        }, 500);
-                    }
-                };
-
-                reader.readAsDataURL(file);
+                return response.json();
+            })
+            .then(data => {
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                data.forEach(photo => addMemoryToGrid(photo.url, photo.id));
+                document.body.removeChild(loadingOverlay);
+            })
+            .catch(error => {
+                console.error('Error uploading photos:', error);
+                alert('Error uploading photos: ' + error.message);
+                document.body.removeChild(loadingOverlay);
             });
         }
 
-        function addMemoryToGrid(imageUrl) {
-            const memoriesGrid = document.getElementById('memoriesGrid');
+        function addMemoryToGrid(imageUrl, photoId) {
+            const photosGrid = document.querySelector('#memoriesGrid .grid');
             const memoryItem = document.createElement('div');
             memoryItem.className = 'relative aspect-square rounded-lg overflow-hidden group cursor-pointer photo-container';
             memoryItem.innerHTML = `
                 <img src="${imageUrl}" alt="Memory" class="w-full h-full object-cover">
                 <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
                     <div class="absolute bottom-2 right-2 flex gap-2">
-                        <button onclick="deleteMemory(this)" class="p-1.5 rounded-full bg-white/80 hover:bg-white text-gray-700 hover:text-red-500 transition-colors">
+                        <button onclick="deleteMemory(this, ${photoId})" class="p-1.5 rounded-full bg-white/80 hover:bg-white text-gray-700 hover:text-red-500 transition-colors">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                             </svg>
@@ -630,24 +656,52 @@
                     </div>
                 </div>
             `;
-            memoriesGrid.insertBefore(memoryItem, memoriesGrid.firstChild);
+            photosGrid.insertBefore(memoryItem, photosGrid.firstChild);
+        }
 
-            // Update the view to show compact upload button
-            const memories = Array.from(memoriesGrid.children);
-            if (memories.length === 1) {
-                updateMemoriesGrid(memories.map(memory => memory.querySelector('img').src));
+        function updateUploadButtonVisibility() {
+            const memoriesGrid = document.getElementById('memoriesGrid');
+            const contentArea = document.querySelector('.p-6');
+            const hasMemories = memoriesGrid.children.length > 0;
+
+            // Update content area with appropriate upload interface
+            if (hasMemories && !contentArea.querySelector('.inline-flex')) {
+                // Add compact upload button if it doesn't exist
+                const uploadButton = document.createElement('div');
+                uploadButton.className = 'flex justify-center mt-6';
+                uploadButton.innerHTML = `
+                    <label class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 cursor-pointer group">
+                        <input type="file" multiple accept="image/*" onchange="handleFileUpload(event)" class="hidden">
+                        <svg class="w-5 h-5 mr-2 text-gray-400 group-hover:text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        Add More Photos
+                    </label>
+                `;
+                contentArea.appendChild(uploadButton);
             }
         }
 
-        function deleteMemory(buttonElement) {
-            const memoryItem = buttonElement.closest('.relative');
-            memoryItem.remove();
-        }
-
-        function updateMemoriesGrid(memories) {
-            const memoriesGrid = document.getElementById('memoriesGrid');
-            memoriesGrid.innerHTML = '';
-            memories.forEach(memory => addMemoryToGrid(memory));
+        function deleteMemory(buttonElement, photoId) {
+            if (confirm('Are you sure you want to delete this photo?')) {
+                fetch(`/memories/${photoId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const memoryItem = buttonElement.closest('.relative');
+                        memoryItem.remove();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting photo:', error);
+                    alert('Error deleting photo. Please try again.');
+                });
+            }
         }
 
         // Close modal when clicking outside
@@ -656,5 +710,11 @@
                 closeModal();
             }
         });
+
+        function getCurrentDestinationId() {
+            const modalTitle = document.getElementById('modalTitle').textContent;
+            const destination = destinations.find(d => d.name === modalTitle);
+            return destination ? destination.id : null;
+        }
     </script>
 </x-app-layout>
