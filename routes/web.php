@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TripSubmissionController;
+use App\Http\Controllers\TripRegistrationController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Destination;
 use App\Http\Controllers\DashboardController;
@@ -19,8 +21,12 @@ Route::get('/trip-map', function () {
 })->name('trip-map');
 
 Route::get('/submission', function () {
-    return view('user.submission');
+    return view('user.trip-submission');
 })->name('submission');
+
+Route::get('/registration', function () {
+    return view('user.trip-registration');
+})->name('registration');
 
 Route::get('/my-trip', function () {
     return view('user.my-trip');
@@ -30,6 +36,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Trip Submission Routes
+    Route::get('/trips/create', [TripSubmissionController::class, 'create'])->name('trips.create');
+    Route::post('/trips', [TripSubmissionController::class, 'store'])->name('trip.store');
+    Route::get('/trips/{trip}', [TripSubmissionController::class, 'show'])->name('trips.show');
+    Route::get('/trips', [TripSubmissionController::class, 'index'])->name('trips.index');
+
+    // Trip Registration Routes
+    Route::get('/trips/{trip}/register', [TripRegistrationController::class, 'create'])->name('registration.create');
+    Route::post('/trips/{trip}/register', [TripRegistrationController::class, 'store'])->name('registration.store');
+    Route::get('/registration/{registration}/confirmation', [TripRegistrationController::class, 'confirmation'])->name('registration.confirmation');
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
@@ -43,6 +60,8 @@ Route::middleware(['auth', 'role:user'])->group(function () {
         return view('user.dashboard');
     })->name('user.dashboard');
 });
+
+
 
 require __DIR__.'/auth.php';
 
