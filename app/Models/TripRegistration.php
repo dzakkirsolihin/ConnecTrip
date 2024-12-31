@@ -11,25 +11,21 @@ class TripRegistration extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'trip_id',
-        'first_name',
-        'last_name',
-        'address',
+        'full_name',
+        'age',
         'whatsapp',
         'emergency_contact',
-        'medical_history',
         'instagram',
-        'twitter',
-        'privacy',
-        'notes',
         'terms'
     ];
 
     protected $casts = [
         'terms' => 'boolean',
+        'age' => 'integer',
     ];
 
-    // Relasi dengan trip submission
     public function trip()
     {
         return $this->belongsTo(TripSubmission::class, 'trip_id');

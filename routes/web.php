@@ -3,86 +3,55 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TripSubmissionController;
 use App\Http\Controllers\TripRegistrationController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
-use App\Models\TripSubmission;
+use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('user.dashboard' , ['dashboard'=> TripSubmission::all()]);
-})->name('dashboard');
+// Public routes
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-Route::get('/trip-map', function () {
-    return view('user.trip-map');
-})->name('trip-map');
-
-Route::get('/submission', function () {
-    return view('user.trip-submission');
-})->name('submission');
-
-Route::get('/registration', function () {
-    return view('user.trip-registration');
-})->name('registration');
-
-Route::get('/my-trip', function () {
-    return view('user.my-trip');
-})->name('my-trip');
-
+// Middleware to enforce authentication for all routes except the dashboard
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Guest-accessible routes (require login to access)
+    Route::view('/trip-map', 'user.trip-map')->name('trip-map');
+    Route::view('/submission', 'user.trip-submission')->name('submission');
+    Route::view('/registration', 'user.trip-registration')->name('registration');
+    Route::view('/my-trip', 'user.my-trip')->name('my-trip');
 
-    // Trip Submission Routes
-    Route::get('/trips/create', [TripSubmissionController::class, 'create'])->name('trips.create');
-    Route::post('/trips', [TripSubmissionController::class, 'store'])->name('trip.store');
-    Route::get('/trips/{trip}', [TripSubmissionController::class, 'show'])->name('trips.show');
-    Route::get('/trips', [TripSubmissionController::class, 'index'])->name('trips.index');
-    Route::get('/destination/{trips:trip_name}', function (TripSubmission $trips) {
-        return view('user.destination', ['tripsubmissions' => $trips]);
-    })->name('destination.show');
+    // Profile routes
+    Route::controller(ProfileController::class)->group(function () {
+        Route::get('/profile', 'edit')->name('profile.edit');
+        Route::patch('/profile', 'update')->name('profile.update');
+        Route::delete('/profile', 'destroy')->name('profile.destroy');
+    });
 
-    // Trip Registration Routes
-    Route::get('/trips/{trip}/register', [TripRegistrationController::class, 'create'])->name('registration.create');
-    Route::post('/trips/{trip}/register', [TripRegistrationController::class, 'store'])->name('registration.store');
-    Route::get('/registration/{registration}/confirmation', [TripRegistrationController::class, 'confirmation'])->name('registration.confirmation');
+    // Trip submission routes
+    Route::controller(TripSubmissionController::class)->group(function () {
+        Route::get('/trips/create', 'create')->name('trips.create');
+        Route::post('/trips', 'store')->name('trip.store');
+        Route::get('/trips/{trip}', 'show')->name('trips.show');
+        Route::get('/trips', 'index')->name('trips.index');
+    });
+
+    // Trip registration routes
+    Route::controller(TripRegistrationController::class)->group(function () {
+        Route::get('/trips/{trip}/register', 'create')->name('registration.create');
+        Route::post('/trips/{trip}/register', 'store')->name('registration.store');
+        Route::get('/registration/{registration}/confirmation', 'confirmation')->name('registration.confirmation');
+    });
+
+    // Destination page route (requires login)
+    Route::get('/destination/{trip:trip_name}', [TripSubmissionController::class, 'show'])
+        ->name('destination.show');
 });
 
+// Role-based routes
 Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
+    Route::view('/admin', 'admin.dashboard')->name('admin.dashboard');
 });
 
 Route::middleware(['auth', 'role:user'])->group(function () {
-    Route::get('/user', function () {
-        return view('user.dashboard');
-    })->name('user.dashboard');
+    Route::view('/user', 'user.dashboard')->name('user.dashboard');
 });
 
-
-
+// Authentication routes
 require __DIR__.'/auth.php';
-
-
-// Contoh Grouping Route dengan Middleware
-// Route::middleware(['auth', 'verified'])->group(function () {
-//     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
-//     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
-// });
-
-// // Contoh Grouping Route denga Prefix
-// Route::prefix('user')->group(function () {
-//     Route::get('/', [DashboardController::class, 'index'])->name('user.dashboard');
-// });
-
-// Contoh Grouping dengan Route Name Prefix
-// Route::name('admin.')->prefix('admin')->group(function () {
-//     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-//     Route::get('/users', [UserController::class, 'index'])->name('users.index');
-// });
-
-// Contoh Grouping dengan subdomain
-// Route::domain('{account}.example.com')->group(function () {
-//     Route::get('/dashboard', [AccountDashboardController::class, 'index'])->name('account.dashboard');
-//     Route::get('/settings', [AccountSettingController::class, 'index'])->name('account.settings');
-// });

@@ -2,14 +2,20 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class TripImage extends Model
 {
-    protected $fillable = ['photo_path', 'trip_submission_id'];
+    use HasFactory;
 
-    public function trip()
+    protected $fillable = [
+        'trip_submission_id',
+        'photo_path',
+    ];
+
+    public function tripSubmission()
     {
-        return $this->belongsTo(Trip::class);
+        return $this->belongsTo(TripSubmission::class, 'trip_submission_id');
     }
 }
