@@ -16,13 +16,11 @@ class TripSubmission extends Model
         'description',
         'start_date',
         'end_date',
-        'meeting_point',
+        'address',
         'whatsapp_group',
         'social_media',
         'price',
         'capacity',
-        'payment_info',
-        'is_public',
         'notes',
         'terms'
     ];
@@ -31,7 +29,6 @@ class TripSubmission extends Model
         'start_date' => 'date',
         'end_date' => 'date',
         'price' => 'decimal:2',
-        'is_public' => 'boolean',
         'terms' => 'boolean',
     ];
 
@@ -39,5 +36,10 @@ class TripSubmission extends Model
     public function registrations()
     {
         return $this->hasMany(TripRegistration::class);
+    }
+
+    public function images()
+    {
+        return $this->hasMany(TripImage::class);
     }
 }

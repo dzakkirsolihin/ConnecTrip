@@ -17,13 +17,11 @@ return new class extends Migration
             $table->text('description');
             $table->date('start_date');
             $table->date('end_date');
-            $table->string('meeting_point');
+            $table->string('address');
             $table->string('whatsapp_group');
             $table->string('social_media')->nullable();
             $table->decimal('price', 10, 2);
             $table->integer('capacity');
-            $table->text('payment_info');
-            $table->boolean('is_public')->default(false);
             $table->text('notes')->nullable();
             $table->boolean('terms')->default(false);
             $table->timestamps();

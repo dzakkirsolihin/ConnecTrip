@@ -4,17 +4,12 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TripSubmissionController;
 use App\Http\Controllers\TripRegistrationController;
 use Illuminate\Support\Facades\Route;
-use App\Models\Destination;
 use App\Http\Controllers\DashboardController;
-
+use App\Models\TripSubmission;
 
 Route::get('/', function () {
-    return view('user.dashboard' , ['dashboard'=> Destination::all()]);
+    return view('user.dashboard' , ['dashboard'=> TripSubmission::all()]);
 })->name('dashboard');
-
-Route::get('/destination/{destination:name_destination}', function (Destination $destination) {
-    return view('user.destination', ['destination' => $destination]);
-});
 
 Route::get('/trip-map', function () {
     return view('user.trip-map');
@@ -42,6 +37,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/trips', [TripSubmissionController::class, 'store'])->name('trip.store');
     Route::get('/trips/{trip}', [TripSubmissionController::class, 'show'])->name('trips.show');
     Route::get('/trips', [TripSubmissionController::class, 'index'])->name('trips.index');
+    Route::get('/destination/{trips:trip_name}', function (TripSubmission $trips) {
+        return view('user.destination', ['tripsubmissions' => $trips]);
+    })->name('destination.show');
 
     // Trip Registration Routes
     Route::get('/trips/{trip}/register', [TripRegistrationController::class, 'create'])->name('registration.create');

@@ -21,22 +21,17 @@
             </div>
             <div class="mt-6 p-6 bg-white rounded-lg shadow-lg">
              <div class="flex justify-between items-center">
-              <h1 class="text-2xl font-bold"> Tur {{ $destination->name_destination }} </h1>
-              <div class="flex items-center space-x-4">
-               <span class="bg-red-600 text-white px-3 py-1 rounded-full"> {{ $destination->status_trip }} </span>
-               <i class="fas fa-share-alt text-gray-600"></i>
-               <i class="fas fa-heart text-gray-600"></i>
-              </div>
+              <h1 class="text-2xl font-bold"> Tur {{ $tripsubmissions->trip_name }} </h1>
              </div>
              <div class="mt-4">
               <div class="flex items-center space-x-2 text-gray-600">
                <i class="fas fa-calendar-alt">
                </i>
-               <span>{{ $destination->date }}</span>
+               <span>{{ $tripsubmissions->start_date }} - {{ $tripsubmissions->end_date }}</span>
               </div>
               <div class="flex items-center space-x-2 text-gray-600 mt-2">
                <i class="fas fa-map-marker-alt"></i>
-               <span>{{ $destination->address }}</span>
+               <span>{{ $tripsubmissions->address }}</span>
               </div>
               <div class="flex items-center space-x-2 text-gray-600 mt-2">
                <i class="fas fa-clock"></i>
@@ -56,24 +51,7 @@
                     <h1 class="text-2xl font-bold">About Destination</h1>
                 </div>
                 <div class="pt-4">
-                    <p>{{ $destination->destination_description }}</p>
-                </div>
-            </div>
-            <div class="mt-6 p-6 bg-white rounded-lg shadow-lg">
-                <div class="flex justify-between items-center">
-                    <h1 class="text-2xl font-bold">Rundown</h1>
-                </div>
-                <div class="pt-4">
-                    <ul>
-                        <li>08.45 - 09.20 Pick up from hotel and directly transfer to Borobudur Temple Tour.</li>
-                        <li>09.20 - 10.00 Departure to the temple from the entrance gate</li>
-                        <li>10.00 - 12.00 Enjoy Borobudur Temple tour</li>
-                        <li>12.00 - 12.40 Go to the place to eat </li>
-                        <li>12.40 - 14.00 Rest and eat</li>
-                        <li>14.00 - 14.20 Head to souvenir shop </li>
-                        <li>14.20 - 15.00 Buy souvenirs </li>
-                        <li>15.00 - 15.35 Return to hotel</li>
-                    </ul>
+                    <p>{{ $tripsubmissions->description }}</p>
                 </div>
             </div>
             <div class="mt-6 p-6 bg-white rounded-lg shadow-lg">
