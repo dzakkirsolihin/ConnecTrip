@@ -34,5 +34,7 @@
 
             <!-- Footer -->
             @include('layouts.footer')
+            <!-- Stack untuk additional scripts -->
+            @stack('scripts')
     </body>
 </html>

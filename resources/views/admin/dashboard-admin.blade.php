@@ -108,62 +108,78 @@
                 {{ $proposals->links() }}
             </div>
         </div>
-    </div>
+        <!-- Rejection Modal -->
+        <div id="rejectModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full z-50">
+            <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                <div class="mt-3">
+                    <h3 class="text-lg font-medium text-gray-900">Reject Trip Proposal</h3>
+                    <form id="rejectForm" action="" method="POST" class="mt-4">
+                        @csrf
+                        @method('PATCH')
+                        <input type="hidden" name="status" value="rejected">
+                        
+                        <div class="mt-2">
+                            <label for="rejection_reason" class="block text-sm font-medium text-gray-700">Rejection Reason</label>
+                            <textarea
+                                name="rejection_reason"
+                                id="rejection_reason"
+                                rows="3"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                required
+                            ></textarea>
+                        </div>
 
-    <!-- Rejection Modal -->
-    <div id="rejectModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
-        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-            <div class="mt-3">
-                <h3 class="text-lg font-medium text-gray-900">Reject Trip Proposal</h3>
-                <form id="rejectForm" action="" method="POST" class="mt-4">
-                    @csrf
-                    @method('PATCH')
-                    <input type="hidden" name="status" value="rejected">
-                    
-                    <div class="mt-2">
-                        <label for="rejection_reason" class="block text-sm font-medium text-gray-700">Rejection Reason</label>
-                        <textarea
-                            name="rejection_reason"
-                            id="rejection_reason"
-                            rows="3"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                            required
-                        ></textarea>
-                    </div>
-
-                    <div class="mt-4 flex justify-end space-x-3">
-                        <button
-                            type="button"
-                            onclick="closeRejectModal()"
-                            class="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200"
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            type="submit"
-                            class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-                        >
-                            Reject
-                        </button>
-                    </div>
-                </form>
+                        <div class="mt-4 flex justify-end space-x-3">
+                            <button
+                                type="button"
+                                onclick="closeRejectModal()"
+                                class="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="submit"
+                                class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                            >
+                                Reject
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 
     @push('scripts')
     <script>
-        function openRejectModal(proposalId) {
-            const modal = document.getElementById('rejectModal');
-            const form = document.getElementById('rejectForm');
-            form.action = `/admin/proposals/${proposalId}/update-status`;
-            modal.classList.remove('hidden');
-        }
+        document.addEventListener('DOMContentLoaded', function() {
+            // Make the functions globally available
+            window.openRejectModal = function(proposalId) {
+                const modal = document.getElementById('rejectModal');
+                const form = document.getElementById('rejectForm');
+                if (modal && form) {
+                    form.action = `/admin/proposals/${proposalId}/update-status`;
+                    modal.classList.remove('hidden');
+                }
+            };
 
-        function closeRejectModal() {
+            window.closeRejectModal = function() {
+                const modal = document.getElementById('rejectModal');
+                if (modal) {
+                    modal.classList.add('hidden');
+                }
+            };
+
+            // Add click event listener to close modal when clicking outside
             const modal = document.getElementById('rejectModal');
-            modal.classList.add('hidden');
-        }
+            if (modal) {
+                modal.addEventListener('click', function(event) {
+                    if (event.target === modal) {
+                        closeRejectModal();
+                    }
+                });
+            }
+        });
     </script>
     @endpush
 </x-admin>
