@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TripSubmissionController;
+use App\Http\Controllers\TripRegistrationController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -35,6 +36,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/trips', [TripSubmissionController::class, 'store'])->name('trip.store');
     Route::get('/trips/{trip}', [TripSubmissionController::class, 'show'])->name('trips.show');
     Route::get('/trips', [TripSubmissionController::class, 'index'])->name('trips.index');
+
+    // Trip Registration Routes
+    Route::get('/trips/{trip}/register', [TripRegistrationController::class, 'create'])->name('registration.create');
+    Route::post('/trips/{trip}/register', [TripRegistrationController::class, 'store'])->name('registration.store');
+    Route::get('/registration/{registration}/confirmation', [TripRegistrationController::class, 'confirmation'])->name('registration.confirmation');
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {

@@ -8,6 +8,16 @@ use Illuminate\Support\Facades\Log;
 
 class TripSubmissionController extends Controller
 {
+
+    public function index()
+    {
+        $trips = TripSubmission::where('is_public', true)
+            ->orderBy('start_date', 'asc')
+            ->paginate(10);
+
+        return view('trips.index', compact('trips'));
+    }
+    
     public function create()
     {
         return view('trips.submission');
@@ -72,14 +82,5 @@ class TripSubmissionController extends Controller
     public function show(TripSubmission $trip)
     {
         return view('trips.show', compact('trip'));
-    }
-
-    public function index()
-    {
-        $trips = TripSubmission::where('is_public', true)
-            ->orderBy('start_date', 'asc')
-            ->paginate(10);
-
-        return view('trips.index', compact('trips'));
     }
 }

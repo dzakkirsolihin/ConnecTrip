@@ -38,6 +38,6 @@ class TripSubmission extends Model
     // Relasi dengan registrations
     public function registrations()
     {
-        // return $this->hasMany(TripRegistration::class, 'trip_id');
+        return $this->hasMany(TripRegistration::class);
     }
 }
