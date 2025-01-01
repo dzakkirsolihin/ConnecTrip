@@ -1,131 +1,161 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('My Trip') }}
-        </h2>
-    </x-slot>
-
-    <!DOCTYPE html>
-    <html lang="en">
     <head>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <title>My Trips</title>
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"/>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <style>
-            .underline-animation {
-                position: relative;
-            }
-            .underline-animation::after {
-                content: "";
-                position: absolute;
-                bottom: 0;
-                left: 50%;
-                width: 0;
-                height: 2px;
-                background-color: black;
-                transition: width 0.3s ease, left 0.3s ease;
-            }
-            .underline-animation.active::after {
-                width: 100%;
-                left: 0;
-            }
-    
-            /* Animation for cards */
-            .card {
-                opacity: 0;
-                transform: translateY(10px);
-                animation: fadeInUp 0.5s ease forwards;
-            }
-    
-            @keyframes fadeInUp {
-                from {
-                    opacity: 0;
-                    transform: translateY(10px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-        </style>
+        <title>My Travel Journey</title>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+        @vite('resources/css/app.css')
     </head>
-    <body class="font-['Roboto'] m-0 p-0 bg-[#f8f1e4]">
-    
+    <body class="font-poppins bg-slate-50 min-h-screen">
         <!-- Hero Section -->
-        <div class="relative text-center text-white">
+        <div class="relative h-[500px] overflow-hidden">
+            <div class="absolute inset-0 bg-black bg-opacity-40 z-10"></div>
+            {{-- {{ asset('images/hero-image.jpg') }} --}}
             <img src="https://static.thehoneycombers.com/wp-content/uploads/sites/4/2024/09/Best-things-to-do-in-Bali-Indonesia-tours-and-attractions-1.jpeg" 
                  alt="Beautiful landscape with a temple and mountains" 
-                 class="w-full h-[400px] object-cover"/>
-            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-5xl font-bold font-['Playfair_Display']">
-                My Trips
+                 class="w-full h-full object-cover object-center transform scale-105"/>
+            <div class="absolute inset-0 z-20 flex flex-col items-center justify-center text-white">
+                <h1 class="text-6xl font-bold mb-4 tracking-wider">My Trip Journey</h1>
+                <p class="text-xl text-gray-200 max-w-2xl text-center px-4">Track and reminisce your adventures across Indonesia</p>
             </div>
         </div>
-    
-        <!-- Tabs -->
-        <div class="flex justify-center bg-[#f8e8d4] py-2.5">
-            <button onclick="showCategory('visited', this)" class="mx-5 px-5 py-2.5 cursor-pointer font-bold underline-animation active">Visited</button>
-            <button onclick="showCategory('beingVisited', this)" class="mx-5 px-5 py-2.5 cursor-pointer font-bold underline-animation">Being Visited</button>
-            <button onclick="showCategory('willBeVisited', this)" class="mx-5 px-5 py-2.5 cursor-pointer font-bold underline-animation">Will be Visited</button>
+
+        <!-- Tabs Navigation -->
+        <div class="sticky top-0 z-30 bg-white bg-opacity-80 backdrop-blur-md shadow-sm">
+            <div class="max-w-5xl mx-auto">
+                <div class="flex justify-center py-4 gap-8">
+                    <button onclick="showCategory('completed', this)" 
+                            class="group relative text-lg font-medium px-6 py-2 rounded-full transition-all duration-300 text-gray-700 hover:text-indigo-600 active-tab">
+                        <span class="flex items-center">
+                            <i class="fas fa-check-circle mr-2"></i>
+                            Completed
+                        </span>
+                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-600 transition-all duration-300 group-hover:w-full"></span>
+                    </button>
+                    <button onclick="showCategory('ongoing', this)" 
+                            class="group relative text-lg font-medium px-6 py-2 rounded-full transition-all duration-300 text-gray-700 hover:text-indigo-600">
+                        <span class="flex items-center">
+                            <i class="fas fa-plane mr-2"></i>
+                            Ongoing
+                        </span>
+                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-600 transition-all duration-300 group-hover:w-full"></span>
+                    </button>
+                    <button onclick="showCategory('upcoming', this)" 
+                            class="group relative text-lg font-medium px-6 py-2 rounded-full transition-all duration-300 text-gray-700 hover:text-indigo-600">
+                        <span class="flex items-center">
+                            <i class="fas fa-calendar-alt mr-2"></i>
+                            Upcoming
+                        </span>
+                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-600 transition-all duration-300 group-hover:w-full"></span>
+                    </button>
+                </div>
+            </div>
         </div>
-    
-        <!-- Trip Cards -->
-        <div id="card-container" class="flex justify-center flex-wrap p-10">
-            <!-- Cards will be dynamically loaded here -->
+
+        <!-- Trip Cards Container -->
+        <div class="max-w-7xl mx-auto px-4 py-12">
+            <div id="card-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 place-items-center">
+                <!-- Cards will be dynamically loaded here -->
+            </div>
         </div>
-    
+
         <script>
-            // Data for each category
-            const trips = {
-                visited: [
-                    { img: 'https://storage.googleapis.com/a1aa/image/XUQ10KijbLL0KpjaIwLZwVJcMurWkptCiUxZEVWJtRUuM0fJA.jpg', name: 'Raja Ampat', location: 'Papua Barat', date: '18-19 Juli 2024' },
-                    { img: 'https://storage.googleapis.com/a1aa/image/6vd34lDMuvqLFZeJ97C8KhCKouq59HOyQsa2ReZKXC36yQfnA.jpg', name: 'Pulau Weh', location: 'Aceh', date: '20-21 Juli 2024' },
-                    { img: 'https://storage.googleapis.com/a1aa/image/wUoijC2R2NJWL9s9tPGyUSd2c6KCBNQb3XbDfpQXa2paZofTA.jpg', name: 'Borobudur', location: 'Jawa Tengah', date: '14-15 Juli 2024' },
-                ],
-                beingVisited: [
-                    { img: 'https://via.placeholder.com/300x200', name: 'Mount Rinjani', location: 'Lombok', date: '01-02 Agustus 2024' },
-                ],
-                willBeVisited: [
-                    { img: 'https://via.placeholder.com/300x200', name: 'Komodo Island', location: 'Nusa Tenggara Timur', date: '15-16 Agustus 2024' },
-                    { img: 'https://via.placeholder.com/300x200', name: 'Lake Toba', location: 'Sumatera Utara', date: '17-18 Agustus 2024' },
-                    { img: 'https://via.placeholder.com/300x200', name: 'Yogyakarta', location: 'DIY', date: '19-20 Agustus 2024' },
-                ],
-            };
-    
-            // Function to display cards based on category
+            // Get trips data from controller
+            const trips = @json($tripsData);
+
             function showCategory(category, button) {
                 const cardContainer = document.getElementById('card-container');
-                cardContainer.innerHTML = ''; // Clear existing cards
-    
-                // Add cards dynamically with animation class
-                trips[category].forEach(trip => {
+                
+                // Adjust grid based on number of items
+                const tripCount = trips[category].length;
+                let gridClass = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 place-items-center';
+                
+                if (tripCount === 1) {
+                    gridClass = 'flex justify-center';
+                } else if (tripCount === 4) {
+                    gridClass = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 place-items-center';
+                } else if (tripCount === 0) {
+                    cardContainer.className = gridClass;
+                    cardContainer.innerHTML = `
+                        <div class="col-span-full text-center py-8">
+                            <i class="fas fa-map-signs text-4xl text-gray-400 mb-4"></i>
+                            <p class="text-gray-500 text-lg">No ${category} trips found</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                cardContainer.className = gridClass;
+                cardContainer.innerHTML = '';
+
+                // Update active tab state
+                document.querySelectorAll('.active-tab').forEach(btn => {
+                    btn.classList.remove('active-tab');
+                    btn.classList.remove('text-indigo-600');
+                });
+                button.classList.add('active-tab');
+                button.classList.add('text-indigo-600');
+
+                // Generate cards with animation delay
+                trips[category].forEach((trip, index) => {
                     const card = `
-                        <div class="bg-white rounded-lg shadow-lg mx-2.5 overflow-hidden w-[300px] card">
-                            <img src="${trip.img}" alt="${trip.name}, ${trip.location}" class="w-full h-auto"/>
-                            <div class="p-5">
-                                <h3 class="m-0 text-2xl">${trip.name}</h3>
-                                <p class="my-1.5 text-gray-500">${trip.location}</p>
-                                <p class="text-[#ff5a5f] font-bold">${trip.date}</p>
+                        <div class="w-full max-w-sm bg-white rounded-2xl shadow-lg overflow-hidden transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl opacity-0 translate-y-4"
+                             style="animation: fadeIn 0.6s ease-out ${index * 100}ms forwards;">
+                            <div class="relative group">
+                                <img src="${trip.image_url}" 
+                                     alt="${trip.name}" 
+                                     class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"/>
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-2xl font-semibold text-gray-800 mb-2">${trip.name}</h3>
+                                <div class="flex items-center text-gray-600 mb-2">
+                                    <i class="fas fa-map-marker-alt mr-2 text-indigo-600"></i>
+                                    <span>${trip.location}</span>
+                                </div>
+                                <div class="flex items-center text-gray-600 mb-2">
+                                    <i class="fas fa-calendar-day mr-2 text-indigo-600"></i>
+                                    <span>${trip.start_date} - ${trip.end_date}</span>
+                                </div>
+                                <div class="flex items-center text-gray-600 mb-2">
+                                    <i class="fas fa-tag mr-2 text-indigo-600"></i>
+                                    <span>Rp ${trip.price}</span>
+                                </div>
+                                <div class="flex items-center text-gray-600 mb-2">
+                                    <i class="fas fa-user mr-2 text-indigo-600"></i>
+                                    <span>${trip.full_name}</span>
+                                </div>
+                                <div class="flex items-center text-gray-600">
+                                    <i class="fab fa-instagram mr-2 text-indigo-600"></i>
+                                    <span>${trip.social_media}</span>
+                                </div>
                             </div>
                         </div>`;
                     cardContainer.innerHTML += card;
                 });
-    
-                // Update active tab styling
-                document.querySelectorAll('.underline-animation').forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
             }
-    
-            // Default category on load
-            document.addEventListener('DOMContentLoaded', () => showCategory('visited', document.querySelector('.underline-animation.active')));
-        </script>
-    
-    </body>
-    </html>
-    
-    
-    
 
+            // Add animation keyframes
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeIn {
+                    from {
+                        opacity: 0;
+                        transform: translateY(1rem);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+
+            // Initialize with completed trips
+            document.addEventListener('DOMContentLoaded', () => {
+                showCategory('completed', document.querySelector('.active-tab'));
+            });
+        </script>
+    </body>
 </x-app-layout>

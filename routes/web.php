@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TripMapController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\MyTripController;
 use App\Http\Middleware\CheckRole;
 
 // Public routes
@@ -45,6 +46,10 @@ Route::middleware('auth')->group(function () {
     // Trip Map Routes
     Route::controller(TripMapController::class)->group(function () {
         Route::get('/map', 'index')->name('trip-map');
+    });
+
+    Route::controller(MyTripController::class)->group(function () {
+        Route::get('/my-trip', 'index')->name('my-trip');
     });
 
     // Destination page route (requires login)
