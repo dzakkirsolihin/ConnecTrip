@@ -11,7 +11,7 @@ class TripMapController extends Controller
 {
     public function index()
     {
-        return view('trip-map');
+        return view('user.trip-map');
     }
 
     public function uploadPhotos(Request $request)

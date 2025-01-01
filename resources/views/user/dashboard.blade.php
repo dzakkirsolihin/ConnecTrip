@@ -50,7 +50,7 @@
                                         <span class="ml-2 text-sm">{{ $trip->formatted_start_date }} - {{ $trip->formatted_end_date }}</span>
                                     </div>
                                     <div class="flex items-center text-gray-600">
-                                        <i class="far fa-map-marker-alt w-5"></i>
+                                        <i class="fas fa-map-marker-alt w-5"></i>
                                         <span class="ml-2 text-sm">{{ $trip->city }}</span>
                                     </div>
                                 </div>
