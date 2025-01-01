@@ -98,14 +98,13 @@
                 <div class="lg:col-span-8">
                     <div class="relative h-[500px] rounded-2xl overflow-hidden shadow-lg">
                         @if($tripsubmissions->images->isNotEmpty())
-                        {{-- {{ asset('storage/' . $tripsubmissions->images->first()->photo_path) }} --}}
                             <img 
                                 src="{{ str_starts_with($tripsubmissions->images->first()->photo_path, 'images/') 
                                 ? asset($tripsubmissions->images->first()->photo_path)
                                 : asset('storage/' . $tripsubmissions->images->first()->photo_path) }}"
                                 alt="{{ $tripsubmissions->trip_name }}"
-                                class="w-full h-64 object-cover"
-                            >
+                                class="w-full h-full object-cover" 
+                            />
                         @endif
                         <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/60 to-transparent p-6">
                             <h1 class="text-3xl font-bold text-white">{{ $tripsubmissions->trip_name }}</h1>

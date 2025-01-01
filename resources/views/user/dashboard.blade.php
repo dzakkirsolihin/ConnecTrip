@@ -28,7 +28,7 @@
                             <div class="relative">
                                 <img src="{{ str_starts_with($trip->images->first()->photo_path, 'images/') 
                                         ? asset($trip->images->first()->photo_path)  // Untuk gambar seeder di public/images
-                                        : asset('storage/' . $trip->images->first()->photo_path) }}"  //Untuk gambar yang diupload user
+                                        : asset('storage/' . $trip->images->first()->photo_path) }}" 
                                         alt="{{ $trip->trip_name }}"
                                         class="w-full h-64 object-cover">
                                     {{-- {{ $trip->images->isNotEmpty() ? asset('storage/' . $trip->images->random()->photo_path) : asset('images/default-trip.jpg') }} --}}
