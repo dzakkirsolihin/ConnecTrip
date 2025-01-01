@@ -13,23 +13,13 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
+                    <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                        {{ __('Admin Dashboard') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('trip-map')" :active="request()->routeIs('trip-map')">
-                        {{ __('Trip Map') }}
+                    <div class="border-l border-gray-300 mx-4"></div>
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-gray-600 hover:text-gray-800">
+                        {{ __('User Dashboard') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('submission')" :active="request()->routeIs('submission')">
-                        {{ __('Submission') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('my-trip')" :active="request()->routeIs('my-trip')">
-                        {{ __('My Trip') }}
-                    </x-nav-link>
-                    @role('admin')
-                        <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')" class="text-red-800 hover:text-red-600">
-                            {{ __('Admin Dashboard') }}
-                        </x-nav-link>
-                    @endrole
                 </div>
             </div>
 
@@ -95,23 +85,13 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
+            <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                {{ __('Admin Dashboard') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('trip-map')" :active="request()->routeIs('trip-map')">
-                {{ __('Trip Map') }}
+            <div class="border-t border-gray-200 my-2"></div>
+            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-gray-600 hover:text-gray-800">
+                {{ __('User Dashboard') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('submission')" :active="request()->routeIs('submission')">
-                {{ __('Submission') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('my-trip')" :active="request()->routeIs('my-trip')">
-                {{ __('My Trip') }}
-            </x-responsive-nav-link>
-            @role('admin')
-                <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')" class="text-red-800 hover:text-red-600">
-                    {{ __('Admin Dashboard') }}
-                </x-responsive-nav-link>
-            @endrole
         </div>
 
         <!-- Responsive Settings Options -->

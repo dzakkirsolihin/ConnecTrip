@@ -14,10 +14,9 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased">
-        <div class="flex flex-col min-h-screen bg-[#FFF7ED]">
+    <body class="font-sans antialiased flex flex-col min-h-screen bg-[#FFF7ED]">
             <!-- Navigation -->
-            @include('layouts.navigation')
+            @include('layouts.nav-admin')
 
             <!-- Page Heading -->
             @isset($header)
@@ -35,6 +34,7 @@
 
             <!-- Footer -->
             @include('layouts.footer')
-        </div>
+            <!-- Stack untuk additional scripts -->
+            @stack('scripts')
     </body>
 </html>
