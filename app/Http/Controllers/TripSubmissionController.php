@@ -71,10 +71,10 @@ class TripSubmissionController extends Controller
             // Upload Gambar Trip ke Tabel trip_images
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $image) {
-                    $path = $image->store('trip-images', 'public');
+                    $path = $image->store('trip-images', 'public'); // Disimpan di storage/app/public/trip-images/
                     TripImage::create([
                         'trip_submission_id' => $trip->id,
-                        'photo_path' => $path,
+                        'photo_path' => $path // Akan tersimpan sebagai 'trip-images/nama_file.jpg'
                     ]);
                 }
             }
@@ -120,6 +120,12 @@ class TripSubmissionController extends Controller
         $trip = TripSubmission::with('images', 'registrations')
             ->where('trip_name', $tripName)
             ->firstOrFail();
+
+        $trip->image_url = $trip->images->first() 
+            ? (str_starts_with($trip->images->first()->photo_path, 'images/') 
+                ? asset($trip->images->first()->photo_path)
+                : asset('storage/' . $trip->images->first()->photo_path))
+            : asset('images/Opening.png');
 
         // Tambahkan logika untuk memeriksa apakah user telah mendaftar ke trip
         $userRegistered = $trip->registrations->contains('user_id', Auth::id());

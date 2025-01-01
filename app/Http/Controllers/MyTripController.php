@@ -51,11 +51,16 @@ class MyTripController extends Controller
 
     private function formatTripData($registration)
     {
+        $imagePath = $registration->trip->images->first()->photo_path ?? 'images/Opening.png';
+
+        // Handle both types of paths
+        $imageUrl = str_starts_with($imagePath, 'images/') 
+            ? asset($imagePath)  // Local images in public folder
+            : asset('storage/' . $imagePath); // Uploaded images
+
         return [
             'id' => $registration->trip->id,
-            'image_url' => $registration->trip->images->first() 
-                ? asset('storage/' . $registration->trip->images->first()->photo_path)
-                : asset('images/default-trip.jpg'),
+            'image_url' => $imageUrl,
             'name' => $registration->trip->trip_name,
             'start_date' => Carbon::parse($registration->trip->start_date)->format('d-m-Y'),
             'end_date' => Carbon::parse($registration->trip->end_date)->format('d-m-Y'),
