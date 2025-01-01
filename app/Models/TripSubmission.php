@@ -13,6 +13,7 @@ class TripSubmission extends Model
     protected $table = 'trip_submissions';
 
     protected $fillable = [
+        'user_id',
         'trip_name',
         'description',
         'start_date',
@@ -28,6 +29,10 @@ class TripSubmission extends Model
         'capacity',
         'notes',
         'terms',
+        'status',
+        'rejection_reason',
+        'reviewed_at',
+        'reviewed_by'
     ];    
 
     protected $casts = [
@@ -35,26 +40,47 @@ class TripSubmission extends Model
         'end_date' => 'date',
         'price' => 'decimal:2',
         'terms' => 'boolean',
+        'reviewed_at' => 'datetime',
     ];
+
+    // Scope untuk mendapatkan trip berdasarkan status
+    public function scopeWithStatus($query, $status)
+    {
+        return $query->where('status', $status);
+    }
+
+    // Relasi dengan admin yang mereview
+    public function reviewer()
+    {
+        return $this->belongsTo(User::class, 'reviewed_by');
+    }
 
     protected function getDurationAttribute(): int 
     {
         $startDate = Carbon::parse($this->start_date);
         $endDate = Carbon::parse($this->end_date);
-        
-        // return $endDate->diffInDays($startDate) + 1;
-        // atau bisa juga ditulis:
         return $startDate->diffInDays($endDate) + 1;
     }
 
-    // Relasi dengan registrations
     public function registrations()
     {
-        return $this->hasMany(TripRegistration::class, 'trip_id'); // Use 'trip_id' as the foreign key
+        return $this->hasMany(TripRegistration::class, 'trip_id');
     }
 
     public function images()
     {
         return $this->hasMany(TripImage::class, 'trip_submission_id');
     }
+
+    protected $appends = ['formatted_start_date', 'formatted_end_date'];
+
+    // public function getFormattedStartDateAttribute()
+    // {
+    //     return $this->start_date->format('d M Y');
+    // }
+
+    // public function getFormattedEndDateAttribute()
+    // {
+    //     return $this->end_date->format('d M Y');
+    // }
 }

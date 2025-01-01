@@ -18,7 +18,19 @@ class TripSubmissionController extends Controller
             ->with('images')
             ->paginate(10);
 
-        return view('trips.index', compact('trips'));
+        $userTrips = Auth::check()
+        ? TripSubmission::with('images')
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->get()
+            ->map(function ($trip) {
+                $trip->formatted_start_date = Carbon::parse($trip->start_date)->format('d F Y');
+                $trip->formatted_end_date = Carbon::parse($trip->end_date)->format('d F Y');
+                return $trip;
+            })
+        : collect();
+
+        return view( 'user.trip-submission', compact('trips', 'userTrips'));
     }
 
     public function store(Request $request)
@@ -51,6 +63,7 @@ class TripSubmissionController extends Controller
 
             // Buat entri TripSubmission
             $trip = TripSubmission::create([
+                'user_id' => Auth::id(),
                 'trip_name' => $validated['trip_name'],
                 'description' => $validated['description'],
                 'start_date' => Carbon::parse($validated['start_date'])->format('Y-m-d'),

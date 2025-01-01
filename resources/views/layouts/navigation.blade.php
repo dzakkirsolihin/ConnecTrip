@@ -19,7 +19,7 @@
                     <x-nav-link :href="route('trip-map')" :active="request()->routeIs('trip-map')">
                         {{ __('Trip Map') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('submission')" :active="request()->routeIs('submission')">
+                    <x-nav-link :href="route('trip-submission')" :active="request()->routeIs('submission')">
                         {{ __('Submission') }}
                     </x-nav-link>
                     <x-nav-link :href="route('my-trip')" :active="request()->routeIs('my-trip')">
@@ -101,7 +101,7 @@
             <x-responsive-nav-link :href="route('trip-map')" :active="request()->routeIs('trip-map')">
                 {{ __('Trip Map') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('submission')" :active="request()->routeIs('submission')">
+            <x-responsive-nav-link :href="route('trip-submission')" :active="request()->routeIs('submission')">
                 {{ __('Submission') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('my-trip')" :active="request()->routeIs('my-trip')">

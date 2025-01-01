@@ -17,7 +17,7 @@ Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 Route::middleware('auth')->group(function () {
     // Guest-accessible routes (require login to access)
     Route::view('/trip-map', 'user.trip-map')->name('trip-map');
-    Route::view('/submission', 'user.trip-submission')->name('submission');
+    // Route::view('/submission', 'user.trip-submission')->name('submission');
     Route::view('/registration', 'user.trip-registration')->name('registration');
     Route::view('/my-trip', 'user.my-trip')->name('my-trip');
 
@@ -31,9 +31,10 @@ Route::middleware('auth')->group(function () {
     // Trip submission routes
     Route::controller(TripSubmissionController::class)->group(function () {
         Route::get('/trips/create', 'create')->name('trips.create');
-        Route::post('/trips', 'store')->name('trip.store');
+        Route::get('/trips/submit', 'index')->name('trip-submission');
+        Route::post('/trips/store', 'store')->name('trip.store');
         Route::get('/trips/{trip}', 'show')->name('trips.show');
-        Route::get('/trips', 'index')->name('trips.index');
+        // Route::get('/trips', 'user.trip-submission')->name('trips.index');
     });
 
     // Trip registration routes
@@ -56,19 +57,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/destination/{trip:trip_name}', [TripSubmissionController::class, 'show'])
         ->name('destination.show');
 
-    // // Trip related routes (requires authentication)
-    // Route::prefix('trips')->group(function () {
-    //     // Trip proposal route
-    //     Route::get('/propose', function () {
-    //         return view('user.propose-trip');
-    //     })->name('trips.propose');
-
-    //     // Trip registration route
-    //     Route::get('/{trip}/register', function () {
-    //         return view('user.trip-registration');
-    //     })->name('trips.register');
-    // });
-
     // Memories/photo routes
     Route::prefix('memories')->group(function () {
         Route::post('/upload', [TripMapController::class, 'uploadPhotos'])->name('memories.upload');
@@ -81,31 +69,10 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::prefix('admin')->group(function () {
         Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-        Route::patch('/proposals/{proposal}/update-status', [AdminController::class, 'updateStatus'])->name('admin.proposals.update-status');
+        Route::get('/trips/{tripSubmission}', [AdminController::class, 'showTripDetails'])->name('admin.trips.show');
+        Route::patch('/trips/{tripSubmission}/status', [AdminController::class, 'updateTripStatus'])->name('admin.trips.update-status');
+        Route::get('/trips/{tripSubmission}/details', [AdminController::class, 'getTripDetails'])->name('admin.trips.details');
     });
 });
 
 require __DIR__.'/auth.php';
-
-// Contoh Grouping Route dengan Middleware
-// Route::middleware(['auth', 'verified'])->group(function () {
-//     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
-//     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
-// });
-
-// // Contoh Grouping Route denga Prefix
-// Route::prefix('user')->group(function () {
-//     Route::get('/', [DashboardController::class, 'index'])->name('user.dashboard');
-// });
-
-// Contoh Grouping dengan Route Name Prefix
-// Route::name('admin.')->prefix('admin')->group(function () {
-//     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-//     Route::get('/users', [UserController::class, 'index'])->name('users.index');
-// });
-
-// Contoh Grouping dengan subdomain
-// Route::domain('{account}.example.com')->group(function () {
-//     Route::get('/dashboard', [AccountDashboardController::class, 'index'])->name('account.dashboard');
-//     Route::get('/settings', [AccountSettingController::class, 'index'])->name('account.settings');
-// });

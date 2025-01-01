@@ -21,6 +21,7 @@
             <div class="max-w-7xl mx-auto">
                 <h2 class="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-12">Featured Destinations</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    @forelse ($approvedTrips as $trip)
                     @foreach ($dashboard as $trip)
                     <a href="/destination/{{ $trip->trip_name }}" class="group">
                         <div class="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all overflow-hidden">
@@ -71,6 +72,11 @@
                         </div>
                     </a>
                     @endforeach
+                    @empty
+                        <div class="col-span-3 text-center py-8">
+                            <p class="text-gray-600">No approved trips available at the moment.</p>
+                        </div>
+                    @endforelse
                 </div>
             </div>
         </div>
