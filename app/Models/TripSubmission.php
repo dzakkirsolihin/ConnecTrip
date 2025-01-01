@@ -74,13 +74,8 @@ class TripSubmission extends Model
 
     protected $appends = ['formatted_start_date', 'formatted_end_date'];
 
-    // public function getFormattedStartDateAttribute()
-    // {
-    //     return $this->start_date->format('d M Y');
-    // }
-
-    // public function getFormattedEndDateAttribute()
-    // {
-    //     return $this->end_date->format('d M Y');
-    // }
+    public function photoMemories()
+    {
+        return $this->hasMany(PhotoMemories::class, 'trip_submission_id');
+    }
 }

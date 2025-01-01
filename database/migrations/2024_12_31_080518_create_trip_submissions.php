@@ -18,11 +18,11 @@ return new class extends Migration
             $table->text('description');
             $table->date('start_date');
             $table->date('end_date');
-            $table->string('city'); // New field for city
-            $table->string('address'); // Full address
-            $table->decimal('latitude', 10, 7)->nullable(); // Latitude
-            $table->decimal('longitude', 10, 7)->nullable(); // Longitude
-            $table->string('ktp_path')->nullable(); // New field for KTP upload
+            $table->string('city');
+            $table->string('address');
+            $table->decimal('latitude', 10, 7)->nullable();
+            $table->decimal('longitude', 10, 7)->nullable();
+            $table->string('ktp_path')->nullable();
             $table->string('whatsapp_group');
             $table->string('social_media')->nullable();
             $table->decimal('price', 10, 2);

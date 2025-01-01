@@ -1,10 +1,8 @@
 <x-app-layout>
     <head>
-        {{-- Required CSS --}}
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" />
         
-        {{-- Only keeping essential custom styles that can't be handled by Tailwind --}}
         <style>
             .custom-popup .leaflet-popup-content-wrapper {
                 @apply bg-white/95 rounded-xl shadow-lg;
@@ -52,15 +50,11 @@
             </h1>
             <div class="flex justify-center gap-8 text-center">
                 <div class="bg-white p-4 rounded-lg shadow">
-                    <p class="text-3xl font-bold text-indigo-600">5</p>
-                    <p class="text-gray-600">Places Visited</p>
-                </div>
-                <div class="bg-white p-4 rounded-lg shadow">
-                    <p class="text-3xl font-bold text-indigo-600">3</p>
+                    <p class="text-3xl font-bold text-indigo-600">{{ $completedTripsCount }}</p>
                     <p class="text-gray-600">Total Trips</p>
                 </div>
                 <div class="bg-white p-4 rounded-lg shadow">
-                    <p class="text-3xl font-bold text-indigo-600">20</p>
+                    <p class="text-3xl font-bold text-indigo-600">{{ $totalPhotosCount }}</p>
                     <p class="text-gray-600">Photos Captured</p>
                 </div>
             </div>
@@ -81,7 +75,9 @@
                     <div class="mb-4">
                         <label for="timelineYearSelect" class="block text-gray-600 font-medium">Select Year:</label>
                         <select id="timelineYearSelect" class="w-full p-2 border rounded-lg" onchange="updateTimeline()">
-                            <!-- Options will be dynamically added -->
+                            @foreach($years as $year)
+                                <option value="{{ $year }}">{{ $year }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <h3 class="text-xl font-semibold mb-4">Your Travel Timeline</h3>
@@ -97,14 +93,14 @@
             <div class="relative min-h-screen flex items-center justify-center p-4">
                 <div class="relative bg-white w-full max-w-4xl rounded-xl shadow-lg overflow-hidden">
                     <!-- Close Button -->
-                    <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 z-10 p-1 rounded-full hover:bg-gray-100 transition-colors">
+                    <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 z-10">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                         </svg>
                     </button>
-    
-                    <!-- Header Image -->
-                    <div class="relative h-[300px] w-full">
+
+                    <!-- Header Section -->
+                    <div class="relative h-[300px]">
                         <img id="modalHeaderImage" class="w-full h-full object-cover" src="" alt="">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                         <div class="absolute bottom-0 left-0 p-6 text-white">
@@ -113,30 +109,39 @@
                             <p id="modalDates" class="text-sm opacity-80"></p>
                         </div>
                     </div>
-    
-                    <!-- Content Area -->
-                    <div class="p-6">
-                        <!-- Memories Grid -->
-                        <div id="memoriesGrid" class="space-y-6">
-                            <!-- Upload Area -->
-                            <div class="mb-8">
-                                <h3 class="text-xl font-semibold mb-4">Your Memories</h3>
-                                <label class="block w-full border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-indigo-500 hover:bg-gray-50 transition-all group">
-                                    <input type="file" multiple accept="image/*" onchange="handleFileUpload(event)" class="hidden">
-                                    <div class="space-y-2">
-                                        <svg class="w-10 h-10 mx-auto text-gray-400 group-hover:text-indigo-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                        </svg>
-                                        <p class="text-gray-600 group-hover:text-gray-900">Click or drag photos to upload</p>
-                                        <p class="text-sm text-gray-500">Support JPG, PNG (max. 5MB)</p>
-                                    </div>
-                                </label>
+
+                    <!-- Trip Details Section -->
+                    <div class="p-6 border-b">
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div class="text-center">
+                                <p class="text-sm text-gray-500">Total Photos</p>
+                                <p id="modalTotalPhotos" class="text-xl font-semibold text-indigo-600">0</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-sm text-gray-500">Trip Duration</p>
+                                <p id="modalDuration" class="text-xl font-semibold text-indigo-600">0 days</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-sm text-gray-500">Trip Cost</p>
+                                <p id="modalPrice" class="text-xl font-semibold text-indigo-600">Rp 0</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-sm text-gray-500">Group Size</p>
+                                <p id="modalCapacity" class="text-xl font-semibold text-indigo-600">0</p>
                             </div>
                         </div>
-    
-                        <!-- Memories Grid -->
-                        <div id="memoriesGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                            <!-- Memory items will be dynamically added here -->
+                    </div>
+
+                    <!-- Description Section -->
+                    <div class="px-6 py-4 border-b">
+                        <h3 class="text-lg font-semibold mb-2">Trip Description</h3>
+                        <p id="modalDescription" class="text-gray-600"></p>
+                    </div>
+
+                    <!-- Memories Grid Section -->
+                    <div class="p-6">
+                        <div id="memoriesGrid" class="space-y-6">
+                            <!-- Photos will be dynamically added here -->
                         </div>
                     </div>
                 </div>
@@ -147,119 +152,15 @@
     {{-- Required Scripts --}}
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        const newStyles = `
-            .loading-overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: rgba(0, 0, 0, 0.5);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                z-index: 9999;
-            }
-
-            .loading-spinner {
-                width: 50px;
-                height: 50px;
-                border: 3px solid #f3f3f3;
-                border-top: 3px solid #3498db;
-                border-radius: 50%;
-                animation: spin 1s linear infinite;
-            }
-
-            .upload-progress {
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                height: 4px;
-                background: #e2e8f0;
-            }
-
-            .upload-progress-bar {
-                height: 100%;
-                background: #4F46E5;
-                transition: width 0.3s ease;
-            }
-
-            @keyframes spin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
-            }
-
-            .uploading {
-                opacity: 0.7;
-                pointer-events: none;
-            }
-        `;
-        const destinations = [
-            {
-                id: 1,
-                name: "Bali",
-                year: 2023,
-                start_date: "2023-01-10",
-                end_date: "2023-01-15",
-                latitude: -8.4095,
-                longitude: 115.1889,
-                image: "https://cdn-ilbjhnn.nitrocdn.com/UzaWnNlGMIDRjWEXrjLYmxYxPOtQLvHH/assets/images/optimized/rev-9cc84da/www.water-sport-bali.com/wp-content/uploads/2012/04/Tips-Wisata-Bali-2.jpg",
-                location: "Denpasar, Bali"
-            },
-            {
-                id: 2,
-                name: "Borobudur",
-                year: 2023,
-                start_date: "2023-02-05",
-                end_date: "2023-02-10",
-                latitude: -7.6079,
-                longitude: 110.2038,
-                image: "https://i.ytimg.com/vi/dwIN_k4ZQSU/sddefault.jpg",
-                location: "Magelang, Central Java"
-            },
-            {
-                id: 3,
-                name: "Raja Ampat",
-                year: 2024,
-                start_date: "2024-03-15",
-                end_date: "2024-03-20",
-                latitude: -0.5897,
-                longitude: 130.1018,
-                image: "https://www.indonesia.travel/content/dam/indtravelrevamp/en/destinations/destination-update-may-2019/RA_Pianemoisland_indtravel.jpg",
-                location: "West Papua"
-            },
-            {
-                id: 4,
-                name: "Bromo",
-                year: 2024,
-                start_date: "2024-05-01",
-                end_date: "2024-05-10",
-                latitude: -7.9425,
-                longitude: 112.9530,
-                image: "https://nusantara-news.co/wp-content/uploads/2023/12/WhatsApp-Image-2023-06-28-at-18.29.33.jpeg",
-                location: "East Java"
-            },
-            {
-                id: 5,
-                name: "Toba Lake",
-                year: 2024,
-                start_date: "2024-06-15",
-                end_date: "2024-06-20",
-                latitude: 2.6736,
-                longitude: 98.8675,
-                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKPLd5O0Mb-30Dyogluvg9CPdy3pbuRVsC8A&s",
-                location: "North Sumatra"
-            }
-        ];
-
+        // Initialize trips data from PHP
+        const trips = {!! json_encode($trips) !!};
+        
         let map;
         let markers = new Map();
         let currentPopup = null;
 
         document.addEventListener('DOMContentLoaded', function () {
             initializeMap();
-            populateTimelineYearDropdown();
             updateTimeline();
         });
 
@@ -272,20 +173,15 @@
             }).addTo(map);
         }
 
-        const styleSheet = document.createElement("style");
-        styleSheet.textContent = newStyles;
-        document.head.appendChild(styleSheet);
-
-        // Modify the marker creation function to improve popup behavior
-        function createMarker(destination) {
-            const marker = L.marker([destination.latitude, destination.longitude]);
+        function createMarker(trip) {
+            const marker = L.marker([trip.latitude, trip.longitude]);
             
             const popupContent = `
                 <div class="popup-content w-[320px] bg-white rounded-xl overflow-hidden shadow-lg">
                     <!-- Image Container with Gradient Overlay -->
                     <div class="relative h-40 overflow-hidden">
-                        <img src="${destination.image}" 
-                            alt="${destination.name}" 
+                        <img src="${trip.image}" 
+                            alt="${trip.name}" 
                             class="w-full h-full object-cover transition duration-300 hover:scale-105"
                         >
                         <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
@@ -295,7 +191,7 @@
                     <div class="p-3 space-y-2">
                         <!-- Location Header -->
                         <div class="space-y-1">
-                            <h4 class="text-lg font-semibold text-gray-800">${destination.name}</h4>
+                            <h4 class="text-lg font-semibold text-gray-800">${trip.name}</h4>
                             <div class="flex items-center gap-1 text-gray-600">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
@@ -303,7 +199,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                                         d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                 </svg>
-                                <p class="text-sm">${destination.location}</p>
+                                <p class="text-sm">${trip.city}</p>
                             </div>
                         </div>
 
@@ -313,11 +209,11 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                                     d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
-                            <p class="text-sm">${formatDate(destination.start_date)} - ${formatDate(destination.end_date)}</p>
+                            <p class="text-sm">${formatDate(trip.start_date)} - ${formatDate(trip.end_date)}</p>
                         </div>
 
                         <!-- Action Button -->
-                        <button onclick="viewMemoriesAndClosePopup(${destination.id})" 
+                        <button onclick="viewMemoriesAndClosePopup(${trip.id})" 
                                 class="w-full mt-2 px-3 py-2 bg-indigo-600 hover:bg-indigo-700 
                                     text-white rounded-lg transition duration-300 ease-in-out
                                     flex items-center justify-center gap-2 group">
@@ -392,69 +288,49 @@
             });
         }
 
-        function populateTimelineYearDropdown() {
-            const yearSelect = document.getElementById('timelineYearSelect');
-            const years = [...new Set(destinations.map(dest => dest.year))].sort((a, b) => b - a);
-            
-            years.forEach(year => {
-                const option = document.createElement('option');
-                option.value = year;
-                option.textContent = year;
-                yearSelect.appendChild(option);
-            });
-
-            // Set default to current year or latest year if current year not available
-            const currentYear = new Date().getFullYear();
-            const defaultYear = years.includes(currentYear) ? currentYear : Math.max(...years);
-            yearSelect.value = defaultYear;
-        }
-
         function updateMarkers(year) {
             // Clear existing markers
             markers.forEach(marker => map.removeLayer(marker));
             markers.clear();
 
             // Add new markers for the selected year
-            const yearDestinations = destinations.filter(dest => dest.year === year);
-            yearDestinations.forEach(destination => {
-                const marker = createMarker(destination);
+            const yearTrips = trips.filter(trip => new Date(trip.start_date).getFullYear() === year);
+            yearTrips.forEach(trip => {
+                const marker = createMarker(trip);
                 marker.addTo(map);
-                markers.set(destination.id, marker);
+                markers.set(trip.id, marker);
             });
 
             // Adjust map view to show all markers if there are any
-            if (yearDestinations.length > 0) {
-                const bounds = L.latLngBounds(yearDestinations.map(dest => [dest.latitude, dest.longitude]));
+            if (yearTrips.length > 0) {
+                const bounds = L.latLngBounds(yearTrips.map(trip => [trip.latitude, trip.longitude]));
                 map.fitBounds(bounds, { padding: [50, 50] });
             }
         }
 
         function updateTimeline() {
             const selectedYear = parseInt(document.getElementById('timelineYearSelect').value);
-            const filteredDestinations = destinations.filter(dest => dest.year === selectedYear);
+            const yearTrips = trips.filter(trip => new Date(trip.start_date).getFullYear() === selectedYear);
             const timeline = document.getElementById('timeline');
 
-            timeline.innerHTML = ''; // Clear existing timeline items
-
-            // Update markers for the selected year
+            timeline.innerHTML = '';
             updateMarkers(selectedYear);
 
-            filteredDestinations.forEach(destination => {
+            yearTrips.forEach(trip => {
                 const timelineItem = document.createElement('div');
                 timelineItem.className = "mb-4 cursor-pointer hover:bg-gray-50 p-2 rounded transition";
                 timelineItem.innerHTML = `
-                    <p class="font-medium">${destination.name}</p>
-                    <p class="text-sm text-gray-600">${new Date(destination.start_date).toLocaleDateString('en-GB', {
+                    <p class="font-medium">${trip.name}</p>
+                    <p class="text-sm text-gray-600">${new Date(trip.start_date).toLocaleDateString('en-GB', {
                         month: 'short',
                         year: 'numeric'
                     })}</p>
                 `;
 
                 timelineItem.addEventListener('click', () => {
-                    // Focus on the destination's marker without creating a new one
-                    const marker = markers.get(destination.id);
+                    const marker = markers.get(trip.id);
                     if (marker) {
-                        map.setView([destination.latitude, destination.longitude], 12);
+                        map.setView([trip.latitude, trip.longitude], 12);
                         marker.openPopup();
                     }
                 });
@@ -463,21 +339,30 @@
             });
         }
 
-        // Simulated memory storage (replace with actual backend storage)
-        const memoriesStorage = new Map();
-
-        function viewMemories(destinationId) {
-            const destination = destinations.find(d => d.id === destinationId);
-            if (!destination) return;
+        function viewMemories(tripId) {
+            const trip = trips.find(t => t.id === tripId);
+            if (!trip) return;
 
             // Update modal content
-            document.getElementById('modalHeaderImage').src = destination.image;
-            document.getElementById('modalTitle').textContent = destination.name;
-            document.getElementById('modalLocation').textContent = destination.location;
-            document.getElementById('modalDates').textContent = `${formatDate(destination.start_date)} - ${formatDate(destination.end_date)}`;
+            document.getElementById('modalHeaderImage').src = trip.image;
+            document.getElementById('modalTitle').textContent = trip.name;
+            document.getElementById('modalLocation').textContent = `${trip.city}`;
+            document.getElementById('modalDates').textContent = `${formatDate(trip.start_date)} - ${formatDate(trip.end_date)}`;
 
-            // Fetch and load existing memories
-            fetch(`/memories/${destinationId}`, {
+            // Calculate duration
+            const startDate = new Date(trip.start_date);
+            const endDate = new Date(trip.end_date);
+            const duration = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+
+            // Update trip details
+            document.getElementById('modalTotalPhotos').textContent = trip.total_photos;
+            document.getElementById('modalDuration').textContent = `${duration} days`;
+            document.getElementById('modalPrice').textContent = `Rp ${trip.price.toLocaleString()}`;
+            document.getElementById('modalCapacity').textContent = trip.capacity;
+            document.getElementById('modalDescription').textContent = trip.description;
+
+            // Fetch and load memories
+            fetch(`/memories/${tripId}`, {
                 headers: {
                     'Accept': 'application/json'
                 }
@@ -488,11 +373,11 @@
                 }
                 return response.json();
             })
-            .then(memories => {
-                if (memories.error) {
-                    throw new Error(memories.error);
+            .then(tripDetails => {
+                if (tripDetails.error) {
+                    throw new Error(tripDetails.error);
                 }
-                updateMemoriesGrid(memories);
+                updateMemoriesGrid(tripDetails);
             })
             .catch(error => {
                 console.error('Error fetching memories:', error);
@@ -504,27 +389,24 @@
             document.body.style.overflow = 'hidden';
         }
 
-        function updateMemoriesGrid(memories) {
+        function updateMemoriesGrid(tripDetails) {
             const memoriesGrid = document.getElementById('memoriesGrid');
             memoriesGrid.innerHTML = '';
             
-            // Container untuk semua konten
             const contentContainer = document.createElement('div');
             contentContainer.className = 'space-y-6';
             
-            // Grid untuk foto-foto
             const photosGrid = document.createElement('div');
             photosGrid.className = 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4';
             
-            // Tambahkan foto-foto yang ada
-            memories.forEach(memory => {
+            tripDetails.photos.forEach(photo => {
                 const memoryItem = document.createElement('div');
                 memoryItem.className = 'relative aspect-square rounded-lg overflow-hidden group cursor-pointer photo-container';
                 memoryItem.innerHTML = `
-                    <img src="${memory.url}" alt="Memory" class="w-full h-full object-cover">
+                    <img src="${photo.url}" alt="Memory" class="w-full h-full object-cover">
                     <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
                         <div class="absolute bottom-2 right-2 flex gap-2">
-                            <button onclick="deleteMemory(this, ${memory.id})" class="p-1.5 rounded-full bg-white/80 hover:bg-white text-gray-700 hover:text-red-500 transition-colors">
+                            <button onclick="deleteMemory(this, ${photo.id})" class="p-1.5 rounded-full bg-white/80 hover:bg-white text-gray-700 hover:text-red-500 transition-colors">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                 </svg>
@@ -535,10 +417,8 @@
                 photosGrid.appendChild(memoryItem);
             });
             
-            // Tambahkan grid foto ke container
             contentContainer.appendChild(photosGrid);
             
-            // Tambahkan tombol upload di bawah grid
             const uploadButton = document.createElement('div');
             uploadButton.className = 'flex justify-center mt-6';
             uploadButton.innerHTML = `
@@ -552,7 +432,6 @@
             `;
             contentContainer.appendChild(uploadButton);
             
-            // Tambahkan semua konten ke memoryGrid
             memoriesGrid.appendChild(contentContainer);
         }
 
@@ -561,21 +440,19 @@
             document.body.style.overflow = 'auto';
         }
 
-        // New function to handle viewing memories and closing popup
-        function viewMemoriesAndClosePopup(destinationId) {
+        function viewMemoriesAndClosePopup(tripId) {
             if (currentPopup) {
                 currentPopup.close();
                 currentPopup = null;
             }
-            viewMemories(destinationId);
+            viewMemories(tripId);
         }
 
-        // Modify file upload handling with loading animation
         function handleFileUpload(event) {
             const files = Array.from(event.target.files);
             if (files.length === 0) return;
 
-            const destinationId = getCurrentDestinationId(); // Tambahkan fungsi untuk mendapatkan ID destinasi aktif
+            const tripId = getCurrentTripId();
             const formData = new FormData();
             
             files.forEach(file => {
@@ -590,7 +467,7 @@
                 formData.append('photos[]', file);
             });
             
-            formData.append('destination_id', destinationId);
+            formData.append('trip_submission_id', tripId);
 
             // Create loading overlay
             const loadingOverlay = document.createElement('div');
@@ -606,18 +483,12 @@
             `;
             document.body.appendChild(loadingOverlay);
 
-            // Add CSRF token to headers
-            const headers = {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            };
-
-            // Upload photos
             fetch('/memories/upload', {
                 method: 'POST',
                 body: formData,
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    'Accept': 'application/json'  // Tambahkan ini
+                    'Accept': 'application/json'
                 }
             })
             .then(response => {
@@ -659,29 +530,6 @@
             photosGrid.insertBefore(memoryItem, photosGrid.firstChild);
         }
 
-        function updateUploadButtonVisibility() {
-            const memoriesGrid = document.getElementById('memoriesGrid');
-            const contentArea = document.querySelector('.p-6');
-            const hasMemories = memoriesGrid.children.length > 0;
-
-            // Update content area with appropriate upload interface
-            if (hasMemories && !contentArea.querySelector('.inline-flex')) {
-                // Add compact upload button if it doesn't exist
-                const uploadButton = document.createElement('div');
-                uploadButton.className = 'flex justify-center mt-6';
-                uploadButton.innerHTML = `
-                    <label class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 cursor-pointer group">
-                        <input type="file" multiple accept="image/*" onchange="handleFileUpload(event)" class="hidden">
-                        <svg class="w-5 h-5 mr-2 text-gray-400 group-hover:text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                        </svg>
-                        Add More Photos
-                    </label>
-                `;
-                contentArea.appendChild(uploadButton);
-            }
-        }
-
         function deleteMemory(buttonElement, photoId) {
             if (confirm('Are you sure you want to delete this photo?')) {
                 fetch(`/memories/${photoId}`, {
@@ -704,17 +552,17 @@
             }
         }
 
+        function getCurrentTripId() {
+            const modalTitle = document.getElementById('modalTitle').textContent;
+            const trip = trips.find(t => t.name === modalTitle);
+            return trip ? trip.id : null;
+        }
+
         // Close modal when clicking outside
         document.getElementById('memoriesModal').addEventListener('click', function(event) {
             if (event.target === this) {
                 closeModal();
             }
         });
-
-        function getCurrentDestinationId() {
-            const modalTitle = document.getElementById('modalTitle').textContent;
-            const destination = destinations.find(d => d.name === modalTitle);
-            return destination ? destination.id : null;
-        }
     </script>
 </x-app-layout>

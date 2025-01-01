@@ -14,10 +14,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Create roles
+        $adminRole = Role::create(['name' => 'admin']);
+        $userRole = Role::create(['name' => 'user']);
+
         $this->call([
-            AdminSeeder::class,
-            // TripSeeder::class,
-            // TripProposalSeeder::class,
+            // AdminSeeder::class,
+            UserSeeder::class,
+            TripSubmissionSeeder::class,
+            TripRegistrationSeeder::class,
+            PhotoMemoriesSeeder::class,
         ]);
     }
 }
